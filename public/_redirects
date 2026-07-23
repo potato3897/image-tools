@@ -1,0 +1,4 @@
+/api/tenapi/*  https://tenapi.cn/v2/:splat  200
+/api/oioweb/*  https://api.oioweb.cn/api/video/:splat  200
+/404  /404.html  404
+/*  /index.html  200

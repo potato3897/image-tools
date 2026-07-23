@@ -1,0 +1,3 @@
+﻿User-agent: *
+Allow: /
+Sitemap: https://pic-tools.cn/sitemap.xml

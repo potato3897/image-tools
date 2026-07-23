@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://pic-tools.cn/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://pic-tools.cn/compress</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pic-tools.cn/convert</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pic-tools.cn/crop</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pic-tools.cn/watermark</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pic-tools.cn/base64</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pic-tools.cn/color</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pic-tools.cn/resize</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pic-tools.cn/qrcode</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pic-tools.cn/rotate</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+</urlset>
