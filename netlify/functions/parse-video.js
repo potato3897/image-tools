@@ -1,9 +1,9 @@
-﻿exports.handler = async (event) => {
+exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
   };
 
   if (event.httpMethod === 'OPTIONS') {
@@ -18,38 +18,27 @@
     const { url } = JSON.parse(event.body);
     if (!url) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing URL' }) };
 
-    const apis = [
-      `https://tenapi.cn/v2/video?url=${encodeURIComponent(url)}`,
-      `https://api.oioweb.cn/api/video/VideoInfo?url=${encodeURIComponent(url)}`,
-    ];
+    const appId = '117354';
+    const appKey = '1se2nsm2cs6dk65bxr83js8fz0bqz65m';
+    const apiUrl = 'https://qyapi.ipaybuy.cn/api/video?appId=' + appId + '&appKey=' + appKey + '&url=' + encodeURIComponent(url);
 
-    let result = null;
-    for (const api of apis) {
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 15000);
-        const resp = await fetch(api, { signal: controller.signal });
-        clearTimeout(timeout);
-        if (!resp.ok) continue;
-        const data = await resp.json();
-        if (data.code === 200 || data.code === 0) {
-          const d = data.data || data;
-          if (d.url || d.video || d.play) {
-            result = {
-              title: d.title || d.desc || d.name || '',
-              cover: d.cover || d.poster || d.img || '',
-              video: d.url || d.video || d.play || d.download || '',
-            };
-            if (result.video) break;
-          }
-        }
-      } catch (e) { continue; }
+    const resp = await fetch(apiUrl, { signal: AbortSignal.timeout(15000) });
+    const data = await resp.json();
+
+    if (data.code === 200 && data.data) {
+      const d = data.data;
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          title: d.title || '',
+          cover: d.cover_url || '',
+          video: d.video_url || '',
+        }),
+      };
     }
 
-    if (result && result.video) {
-      return { statusCode: 200, headers, body: JSON.stringify(result) };
-    }
-    return { statusCode: 200, headers, body: JSON.stringify({ error: '无法解析该视频链接' }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ error: data.msg || '解析失败' }) };
   } catch (e) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: '服务器错误: ' + e.message }) };
   }
