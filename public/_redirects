@@ -1,3 +1,3 @@
-/api/parse-video  /.netlify/functions/parse-video  200
+/api/qyapi  https://qyapi.ipaybuy.cn/api/video  200
 /404  /404.html  404
 /*  /index.html  200
