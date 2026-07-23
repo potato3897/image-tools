@@ -18,20 +18,16 @@ export default function VideoWatermarkPage() {
     setLoading(true); setResult(null); setError('');
 
     try {
-      const resp = await fetch('/api/parse-video', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: u }),
-      });
+      const resp = await fetch('/api/qyapi?appId=117354&appKey=1se2nsm2cs6dk65bxr83js8fz0bqz65m&url=' + encodeURIComponent(u));
       const data = await resp.json();
-      if (data.video) {
-        setResult({ title: data.title || '', cover: data.cover || '', video: data.video });
+      if (data.code === 200 && data.data?.video_url) {
+        setResult({ title: data.data.title || '', cover: data.data.cover_url || '', video: data.data.video_url });
         setLoading(false);
         return;
       }
-      setError(data.error || '解析失败，请确认链接正确后重试');
+      setError(data.msg || '解析失败');
     } catch {
-      setError('网络请求失败，请检查网络后重试');
+      setError('网络错误');
     }
     setLoading(false);
   };
@@ -51,7 +47,7 @@ export default function VideoWatermarkPage() {
           <label className="label">视频分享链接</label>
           <div className="flex gap-2 mt-2">
             <input value={url} onChange={e => setUrl(e.target.value)}
-              placeholder="在 App 内复制分享内容，直接粘贴（自动提取链接）"
+              placeholder="在 App 内复制分享内容，直接粘贴"
               className="input flex-1"
               onKeyDown={e => e.key === 'Enter' && handleSubmit()} />
             <button onClick={handleSubmit} disabled={loading}
@@ -63,7 +59,7 @@ export default function VideoWatermarkPage() {
         {loading && (
           <div className="bg-blue-50 rounded-xl p-5 border border-blue-100 text-center">
             <div className="animate-pulse text-3xl mb-2">⏳</div>
-            <p className="text-blue-600 font-medium">正在解析视频，请稍候...</p>
+            <p className="text-blue-600 font-medium">正在解析视频...</p>
           </div>
         )}
         {result?.video && (
@@ -71,27 +67,23 @@ export default function VideoWatermarkPage() {
             {result.title && <p className="font-bold text-green-800 text-sm truncate">📹 {result.title}</p>}
             {result.cover && <img src={result.cover} alt="" className="rounded-lg max-h-48 object-cover" />}
             <div className="flex gap-2">
-              <a href={result.video} target="_blank" rel="noreferrer" className="btn btn-success">📥 下载视频</a>
+              <a href={result.video} target="_blank" rel="noreferrer" className="btn btn-success">📥 下载</a>
               <button onClick={() => { navigator.clipboard.writeText(result.video); }} className="btn btn-outline">📋 复制链接</button>
             </div>
           </div>
         )}
         {error && (
           <div className="bg-amber-50 rounded-xl p-5 border border-amber-200 content-fade">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">⚠️</span>
-              <p className="text-sm text-amber-700">{error}</p>
-            </div>
+            <div className="flex items-start gap-3"><span className="text-2xl">⚠️</span><p className="text-sm text-amber-700">{error}</p></div>
           </div>
         )}
       </div>
       <div className="mt-8 card p-5">
         <h3 className="font-bold text-gray-700 mb-3">📖 操作步骤</h3>
         <ol className="space-y-2 text-sm text-gray-500 list-decimal list-inside">
-          <li>打开视频 App，找到目标视频</li>
-          <li>点击右侧 <strong>"分享" → "复制链接"</strong></li>
-          <li>回到本页面粘贴，点击"去水印"</li>
-          <li>等待 5-10 秒解析完成，点击下载</li>
+          <li>打开视频 App → <strong>分享 → 复制链接</strong></li>
+          <li>粘贴到上方，点击"去水印"</li>
+          <li>等待解析完成，点击下载</li>
         </ol>
       </div>
     </div>
